@@ -1,12 +1,17 @@
 """Дополнительный модуль: вспомогательные функции."""
 
-import configparser
+# ИСПОЛЬЗОВАТЬ: из стандартной библиотеки лучше импортировать только необходимые объекты, чем модули целиком — последни могут быть весьма объёмными
+from configparser import ConfigParser
+
+
+# ИСПОЛЬЗОВАТЬ: в этот модуль вы импортируете модуль с глобальными переменными и далее обращаетесь к ним
+import data
 
 
 # вариант решения 2
 def read_ini(file_name) -> dict:
     """Читает ini-файл и возвращает его содержимое в формате вложенного словаря."""
-    config = configparser.ConfigParser()
+    config = ConfigParser()
     config.read(file_name)
     dictionary = {}
     for section in config.sections():
