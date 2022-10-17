@@ -9,21 +9,27 @@ import data
 
 
 # вариант решения 2
-def read_ini(file_name) -> dict:
+def read_ini(file_name: str) -> dict:
     """Читает ini-файл и возвращает его содержимое в формате вложенного словаря."""
     config = ConfigParser()
     config.read(file_name)
+    # УДАЛИТЬ: вместо локальной переменной необходимо использовать глобальную переменную из модуля data
     dictionary = {}
-    for section in config.sections():
-        dictionary[section] = {}
-        for option in config.options(section):
-            dictionary[section][option] = config.get(section, option)
+    for player in config.sections():
+        # ИСПРАВИТЬ: здесь и далее, вместо dictionary используйте data.STATS
+        dictionary[player] = {}
+        for key, value in config[player].items():
+            # ИСПОЛЬЗОВАТЬ: когда значениями словаря являются числа, считывать их необходимо как числа
+            dictionary[player][key] = int(value) if value.isdecimal() else value
+    # УДАЛИТЬ: поскольку вы изменяете глобальную переменную, то возвращать что-либо не требуется
     return dictionary
 
 
 # СДЕЛАТЬ: изучите структуру файлов и данных в референсе, делайте по аналогии
 
 
-file_name = 'players.ini'
-res = read_ini(file_name)
-print(f'{res}')
+# ИСПОЛЬЗОВАТЬ: все тесты и всю отладку убираем под проверку импорта
+if __name__ == '__main__':
+    file_name = 'players.ini'
+    read_ini(file_name)
+    print(data.STATS)
