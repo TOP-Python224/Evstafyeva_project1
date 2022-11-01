@@ -21,6 +21,8 @@ def read_ini(file_name: str) -> bool:
         for key, value in config[player].items():
             data.STATS[player][key] = int(value) if value.isdecimal() else value
     # ДОБАВИТЬ: загрузку сохранений из файла saves.ini в словарь data.SAVES
+    data.SAVES = {}
+
     # отсутствие сохранённых ранее имён игроков трактуем как первый запуск приложения
     if data.STATS:
         return False
@@ -78,4 +80,7 @@ if __name__ == '__main__':
     file_name = 'players.ini'
     read_ini(file_name)
     print(data.STATS)
-    draw_board()
+    file_name = 'player.ini'
+    read_ini(file_name)
+    print(data.SAVES)
+    # draw_board()
