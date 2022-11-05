@@ -2,6 +2,7 @@
 
 # импорт дополнительных модулей
 import data
+import bot
 
 
 def human_turn(training: bool = False) -> int:
@@ -15,6 +16,12 @@ def human_turn(training: bool = False) -> int:
 
 def bot_turn(token_index: int, training: bool = False) -> int:
     """Вычисляет и возвращает координату ячейки поля для текущего хода бота в зависимости от сложности."""
+    # предположим, что в текущий момент функция не знает, который игрок является ботом
+    for player in data.PLAYERS:
+        if player == '#1':
+            return bot.easy_mode()
+        elif player == '#2':
+            return bot.hard_mode()
 
 
 def check_win() -> bool:

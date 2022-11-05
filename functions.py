@@ -6,6 +6,7 @@
 
 # импорт из стандартной библиотеки
 from configparser import ConfigParser
+from shutil import get_terminal_size
 
 # импорт дополнительных модулей
 import data
@@ -59,15 +60,18 @@ def get_player_name() -> None:
                 players.write(f_out)
 
 
-def draw_board(align_right: bool = False) -> str:
+def draw_board(board: data.Series, align_right: bool = False) -> str:
     """Формирует и возвращает строку, содержащую псевдографическое изображение игрового поля со сделанными ходами."""
-    # ОТВЕТИТЬ: чем возврат значения функцией отличается от вывода значения в стандартный поток?
+    board = [str(c) for c in board]
+    margin = ' '*(1, get_terminal_size()[0]-1)[align_right]
+    cell_max_width = max(len(c) for c in board) + 2
+    board_graph = ''
     for i in data.RANGE:
-        # ИСПРАВИТЬ: вместо числового литерала 3 используйте глобальную переменную data.DIM — она специально для этого существует
-        print(data.BOARD[0+i*3], "|", data.BOARD[1+i*3], "|", data.BOARD[2+i*3])
-        # КОММЕНТАРИЙ: упорядочивая код — упорядочиваете мысли; а у вас солянка какая-то: вертикальные разделители выше литералами прописываете, а здесь вычисляете, размерность поля выше тоже литералами, а здесь вспомнили про data.DIM — это признак сумбура и непонимания происходящего
-        print(chr(773)*data.DIM*2)
-    # ДОБАВИТЬ: основное назначение функции — не пустую сеточку выводить, кому сдалась она пустой — а сделанные ходы
+        row = board[i*data.DIM:(i+1)*data.DIM]
+        board_graph += margin + '|'.join(cell.center(cell_max_width) for cell in row) + '\n'
+    horiz_line = margin + '—'*(cell_max_width*data.DIM + data.DIM - 1)
+    board_graph = board_graph.rstrip().replace('\n', f'\n{horiz_line}\n')
+    return board_graph
 
 
 def update_stats(score: data.Score) -> None:
@@ -77,9 +81,20 @@ def update_stats(score: data.Score) -> None:
 # КОММЕНТАРИЙ: сначала мы пишем все объявления всех функций — и только ниже пишем все тесты
 
 
+def change_dimension(new_dimension: int) -> None:
+    """Изменяет размер игрового поля, пересчитывая релевантные глобальные переменные."""
+    if new_dimension != data.DIM:
+        data.DIM = new_dimension
+        data.CELLS = new_dimension**2
+        data.RANGE = range(new_dimension)
+        data.ALL_TURNS = range(data.CELLS)
+        data.BOARD = ['']*data.CELLS
+
+
 # тест
 if __name__ == '__main__':
-    read_ini()
-    print(data.STATS)
-    print(data.SAVES)
-    # draw_board()
+    # read_ini()
+    # print(data.STATS)
+    # print(data.SAVES)
+    change_dimension(11)
+    print(draw_board(range(1, 122)))
