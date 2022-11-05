@@ -11,18 +11,20 @@ from configparser import ConfigParser
 import data
 
 
-def read_ini(file_name: str) -> bool:
+def read_ini() -> bool:
     """Читает ini-файл и возвращает его содержимое в формате вложенного словаря."""
     config = ConfigParser()
-    config.read(file_name)
-    data.STATS = {}
+    config.read(data.players_ini)
     for player in config.sections():
         data.STATS[player] = {}
         for key, value in config[player].items():
-            data.STATS[player][key] = int(value) if value.isdecimal() else value
-    # ДОБАВИТЬ: загрузку сохранений из файла saves.ini в словарь data.SAVES
-    data.SAVES = {}
-
+            data.STATS[player][key] = int(value) if value.isdecimal() else config[player].getboolean(key)
+    config = ConfigParser()
+    config.read(data.saves_ini)
+    for players in config.sections():
+        turns = {config[players].getint('dim'): [int(t) for t in config[players]['turns'].split(',')]}
+        players = tuple(players.split(';'))
+        data.SAVES[players] = turns
     # отсутствие сохранённых ранее имён игроков трактуем как первый запуск приложения
     if data.STATS:
         return False
@@ -77,10 +79,7 @@ def update_stats(score: data.Score) -> None:
 
 # тест
 if __name__ == '__main__':
-    file_name = 'players.ini'
-    read_ini(file_name)
+    read_ini()
     print(data.STATS)
-    file_name = 'player.ini'
-    read_ini(file_name)
     print(data.SAVES)
     # draw_board()
