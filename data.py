@@ -13,6 +13,8 @@ SAVES = {}
 
 PLAYERS = []
 TOKENS = ('X', 'O')
+WEIGHT_OWN = 1.5
+WEIGHT_FOE = 1
 
 DIM = 3
 CELLS = DIM**2
