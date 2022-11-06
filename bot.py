@@ -186,6 +186,7 @@ def calc_sm_zero() -> data.Matrix:
         bot += [m4[i] + [0] * rem + m3[i]]
     return top + [[0] * data.DIM] * rem + bot
 
+
 # переменные модуля
 SM = (
     calc_sm_cross(),
@@ -217,9 +218,6 @@ if __name__ == '__main__':
 
     print(f'{hard_mode() = }')
 
-
-# тесты
-if __name__ == '__main__':
 
     data.PLAYERS = ['#1', 'Natalia']
     data.BOARD = ['']*data.DIM**2
